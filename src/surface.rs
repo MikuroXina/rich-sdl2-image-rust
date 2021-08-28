@@ -4,20 +4,25 @@ use rich_sdl2_rust::{
     surface::{RawSurface, Surface},
     Result, Sdl, SdlError,
 };
+use static_assertions::assert_not_impl_all;
 use std::{
     ffi::{CStr, CString},
+    marker::PhantomData,
     os::raw::c_char,
     ptr::NonNull,
 };
 
-use crate::bind;
+use crate::{bind, Img};
 
 /// An image surface for the loaded picture.
-pub struct ImgSurface {
+pub struct ImgSurface<'img> {
     surface: NonNull<RawSurface>,
+    _phantom: PhantomData<&'img ()>,
 }
 
-impl ImgSurface {
+assert_not_impl_all!(ImgSurface: Send, Sync);
+
+impl<'img> ImgSurface<'img> {
     /// Constructs a new image surface from the file. The format will automatically determined if `file_type` is `None`. `file_type` is case-insensitive and can be one of these:
     ///
     /// - `"TGA"`
@@ -40,7 +45,7 @@ impl ImgSurface {
     /// # Panics
     ///
     /// Panics if `file_name` or `file_type` is an empty string.
-    pub fn new(file_name: &str, file_type: Option<&str>) -> Result<Self> {
+    pub fn new(_img: &'img Img, file_name: &str, file_type: Option<&str>) -> Result<Self> {
         let file_name_cstr = CString::new(file_name).expect("file_name mus not be empty");
         let mode = CStr::from_bytes_with_nul(b"rb\0").unwrap();
         let fp = unsafe { bind::SDL_RWFromFile(file_name_cstr.as_ptr(), mode.as_ptr()) };
@@ -58,12 +63,13 @@ impl ImgSurface {
         } else {
             Ok(Self {
                 surface: NonNull::new(ptr.cast()).unwrap(),
+                _phantom: PhantomData,
             })
         }
     }
 
     /// Constructs a new image surface from XPM format str slice.
-    pub fn from_xpm(xpm: &[&str]) -> Result<Self> {
+    pub fn from_xpm(_img: &'img Img, xpm: &[&str]) -> Result<Self> {
         let xpm: Vec<_> = xpm
             .iter()
             .map(|&s| CString::new(s).expect("xpm fragment must not be empty"))
@@ -76,18 +82,19 @@ impl ImgSurface {
         } else {
             Ok(Self {
                 surface: NonNull::new(ptr.cast()).unwrap(),
+                _phantom: PhantomData,
             })
         }
     }
 }
 
-impl Surface for ImgSurface {
+impl Surface for ImgSurface<'_> {
     fn as_ptr(&self) -> NonNull<RawSurface> {
         self.surface
     }
 }
 
-impl Drop for ImgSurface {
+impl Drop for ImgSurface<'_> {
     fn drop(&mut self) {
         unsafe { bind::SDL_FreeSurface(self.surface.as_ptr().cast()) }
     }
