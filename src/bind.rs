@@ -650,6 +650,12 @@ fn bindgen_test_layout_SDL_RWops() {
         )
     );
 }
+extern "C" {
+    pub fn SDL_RWFromFile(
+        file: *const ::std::os::raw::c_char,
+        mode: *const ::std::os::raw::c_char,
+    ) -> *mut SDL_RWops;
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct SDL_Color {

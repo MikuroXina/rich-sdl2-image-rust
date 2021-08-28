@@ -29,6 +29,7 @@ fn main() {
         .clang_arg("-ISDL2/include")
         .allowlist_function("IMG_.*")
         .allowlist_function("SDL_FreeSurface")
+        .allowlist_function("SDL_RWFromFile")
         .allowlist_type("IMG_.*")
         .allowlist_var("IMG_.*")
         .generate_comments(false)
