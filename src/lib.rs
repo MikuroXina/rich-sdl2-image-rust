@@ -10,6 +10,7 @@ use static_assertions::assert_not_impl_all;
 use std::{cell::Cell, marker::PhantomData};
 
 mod bind;
+pub mod surface;
 
 bitflags! {
     /// A flag to init an [`Img`] controller.

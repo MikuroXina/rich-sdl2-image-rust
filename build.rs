@@ -28,6 +28,7 @@ fn main() {
         .header("wrapper.h")
         .clang_arg("-ISDL2/include")
         .allowlist_function("IMG_.*")
+        .allowlist_function("SDL_FreeSurface")
         .allowlist_type("IMG_.*")
         .allowlist_var("IMG_.*")
         .generate_comments(false)
