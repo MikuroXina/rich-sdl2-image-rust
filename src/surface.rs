@@ -6,6 +6,7 @@ use rich_sdl2_rust::{
 };
 use std::{
     ffi::{CStr, CString},
+    os::raw::c_char,
     ptr::NonNull,
 };
 
@@ -52,6 +53,24 @@ impl ImgSurface {
                 file_type_cstr.map_or(std::ptr::null(), |cstr| cstr.as_ptr()),
             )
         };
+        if ptr.is_null() {
+            Err(SdlError::Others { msg: Sdl::error() })
+        } else {
+            Ok(Self {
+                surface: NonNull::new(ptr.cast()).unwrap(),
+            })
+        }
+    }
+
+    /// Constructs a new image surface from XPM format str slice.
+    pub fn from_xpm(xpm: &[&str]) -> Result<Self> {
+        let xpm: Vec<_> = xpm
+            .iter()
+            .map(|&s| CString::new(s).expect("xpm fragment must not be empty"))
+            .collect();
+        // SAFETY: the reason why casting to mutable pointer is the API receives C string literal array `char **` for compatibility.
+        let xpm_ptr: Vec<_> = xpm.iter().map(|s| s.as_ptr() as *mut c_char).collect();
+        let ptr = unsafe { bind::IMG_ReadXPMFromArray(xpm_ptr.as_ptr() as *mut _) };
         if ptr.is_null() {
             Err(SdlError::Others { msg: Sdl::error() })
         } else {
