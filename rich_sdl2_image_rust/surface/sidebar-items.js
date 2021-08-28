@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ImgSurface","An image surface for the loaded picture."]]});

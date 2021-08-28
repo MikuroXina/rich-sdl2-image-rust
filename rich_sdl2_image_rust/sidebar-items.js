@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["format","Format checker extension for [`RwOps`]."],["surface","Image surface to load some image format to [`Surface`]."]],"struct":[["Img","A root controller for sdl_image."],["ImgInitFlag","A flag to init an [`Img`] controller."]]});

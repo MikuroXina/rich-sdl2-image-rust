@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rich_sdl2_image_rust"] = [{"text":"impl Surface for <a class=\"struct\" href=\"rich_sdl2_image_rust/surface/struct.ImgSurface.html\" title=\"struct rich_sdl2_image_rust::surface::ImgSurface\">ImgSurface</a>&lt;'_&gt;","synthetic":false,"types":["rich_sdl2_image_rust::surface::ImgSurface"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
