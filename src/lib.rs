@@ -9,6 +9,8 @@ use rich_sdl2_rust::{Result, SdlError, SdlVersion};
 use static_assertions::assert_not_impl_all;
 use std::{cell::Cell, marker::PhantomData};
 
+/// Rust FFI to `SDL_image.h`
+#[allow(warnings)]
 mod bind;
 pub mod format;
 pub mod surface;
